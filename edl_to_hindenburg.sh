@@ -23,6 +23,11 @@
 #
 ##############################################################################################################################################
 
+# set -x
+#  exec 3>&1 4>&2
+#  trap 'exec 2>&4 1>&3' 0 1 2 3
+#  exec 1>/Users/TR/Documents/coding/testfilesDAW/edl.log 2>&1
+
 #settings
 gap=3 #seconds of silence between clips on track 2
 
@@ -38,38 +43,41 @@ outputfolder="$project Files"
 
 mkdir -p "$outputpath/$outputfolder"
 
-#look for file names and write header to output file
+#look for file names, determine sample rate, and write header to output file
+awk -v outputpath="$outputpath" -v outputfolder="$outputfolder" '
+/FROM.CLIP.NAME/ && !seen[substr($0,index($0,$5))] {
+  filename=substr($0,index($0,$5));
+  ++seen[filename];
+  findsamplerate="soxi -r "outputpath"/"filename;
+  findsamplerate | getline samplerate[++number_of_files]
+  lastrate=samplerate[number_of_files]
+}
+END {
+  for (i=1; i<=number_of_files; i++) {
+        if (samplerate[i] != lastrate) {
+          print "WARNING: all sample rates must be identical" > "/dev/stderr"
+        }
+    }
+  printf("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Session Samplerate=\"%s\">\n",lastrate);
+}' "$inputfile" >"$outputfile"
+
+#look for file names and write Audiopool to output file, copy files to Hindenburg folder
 awk -v outputpath="$outputpath" -v outputfolder="$outputfolder" '
 BEGIN {
   number_of_files=0;
-  printf("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Session Samplerate=\"\">\n <AudioPool Path=\"%s\" Location=\"%s\">\n",outputfolder,outputpath);
+  printf(" <AudioPool Path=\"%s\" Location=\"%s\">\n",outputfolder,outputpath);
   }
 /FROM.CLIP.NAME/ && !seen[substr($0,index($0,$5))] {
   filename=substr($0,index($0,$5));
   ++seen[filename];
   number_of_files+=1;
+  copy="cp "outputpath"/"filename" \""outputpath"/"outputfolder"/"filename"\"";
+  copy | getline tmp
   printf("  <File Id=\"%s\" Name=\"%s\">\n   <MetaData OriginalPath=\"%s/%s\"/>\n  </File>\n",number_of_files,filename,outputpath,filename);
 }
 END {
   print " </AudioPool>";
-}' "$inputfile" >"$outputfile"
-
-#parse output file for file names and examine audio properties
-files=$(grep '<File Id=' "$outputfile" | sed 's# *<File Id="[0-9]*" Name="\(.*\)">#\1#g')
-# turn this into proper array:
-IFS=$'\n' files=(${files})
-i=1
-for item in "${files[@]}" ; do    
-  samplerate[$i]=$(soxi -r "$outputpath/$item")
-  if [ "${samplerate[1]}" != "${samplerate[$i]}" ] ; then
-   exit #sample rate must be the same across files
-  fi
-  cp "$outputpath/$item" "$outputpath/$outputfolder/$item"
-  let "i+=1"
-done
-
-#replace line 2 in output file with sample rate value
-sed -i '' -e "2s/.*/<Session Samplerate=\"${samplerate[1]}\">/" "$outputfile"
+}' "$inputfile" >>"$outputfile"
 
 # First track has all items from EDL at their original position on the timeline
 awk '
