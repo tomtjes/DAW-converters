@@ -43,7 +43,7 @@ BEGIN {
   lastrate=0
 }
 
-/[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}/ {
+/[0-9][0-9]:[0-9][0-9]:[0-9][0-9]:[0-9][0-9]/ {
 #line contains time code
   number_of_items++
   #convert timecodes to seconds
