@@ -47,7 +47,7 @@ BEGIN {
     getline;
     file_number=$1
     #urldecode
-    for (y=0;y<127;y++) if (y!=37) gsub(sprintf("%%%02x|%%%02X",y,y), y==38 ? "\\&" : sprintf("%c", y), $0);gsub(/%25/, "%", $0);
+    for (y=0;y<255;y++) if (y!=37) gsub(sprintf("%%%02x|%%%02X",y,y), y==38 ? "\\&" : sprintf("%c", y), $0);gsub(/%25/, "%", $0);
     split($0, a, "\"");
     originalpath[file_number] = a[2];
     #remove file://
