@@ -13,7 +13,7 @@
 # Usage: Open Terminal, navigate to folder containing the script and before first run enter:
 # chmod +x hindenburg_to_samplitude-edl.sh
 # To convert the Hindenburg file my-session.nhsx enter:
-# hindenburg_to_samplitude-edl.sh my-session.nhsx
+# hindenburg_to_samplitude-edl.sh /path/to/my-session.nhsx
 #
 # Revision history :
 # 06. Mar 2019 - v0.9 - creation by Thomas Reintjes
@@ -30,6 +30,9 @@ inputfile="$1"
 #output
 outputfile="${1%.*}.samplitude.edl"
 outputpath="${1%/*}"
+if [[ "$outputpath" == "" ]] ; then
+  outputpath="$PWD"
+fi
 
 #functions
 #convert 00:00:00.000 timecodes into number of samples

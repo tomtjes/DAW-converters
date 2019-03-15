@@ -13,7 +13,7 @@
 # Usage: Open Terminal, navigate to folder containing the script and before first run enter:
 # chmod +x samplitude-edl_to_hindenburg.awk
 # To convert the EDL file my-samplitude.edl enter:
-# samplitude-edl_to_hindenburg.awk my-samplitude.edl
+# samplitude-edl_to_hindenburg.awk /path/to/my-samplitude.edl
 #
 # Revision history :
 # 13. Mar 2019 - v0.9 - creation by Thomas Reintjes
@@ -43,15 +43,15 @@ BEGIN {
 /^Sample Rate:/ {samplerate=$3}
 
 /^Source Table Entries:/ {
-  number_of_files=$4;
+  number_of_files=$4
   for (i=1; i<=number_of_files; i++) {
-    getline;
+    getline
     file_number=$1
     #urldecode
-    for (y=0;y<255;y++) if (y!=37) gsub(sprintf("%%%02x|%%%02X",y,y), y==38 ? "\\&" : sprintf("%c", y), $0);gsub(/%25/, "%", $0);
+    for (y=0;y<255;y++) if (y!=37) gsub(sprintf("%%%02x|%%%02X",y,y), y==38 ? "\\&" : sprintf("%c", y), $0);gsub(/%25/, "%", $0)
     #find quoted filenames
-    split($0, a, "\"");
-    originalpath[file_number] = a[2];
+    split($0, a, "\"")
+    originalpath[file_number] = a[2]
     #remove file://
     if (originalpath[file_number] ~ /file:/) originalpath[file_number]=substr(originalpath[file_number],8)
     #separate filename from rest of path

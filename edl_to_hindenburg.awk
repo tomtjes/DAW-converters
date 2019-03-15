@@ -15,7 +15,7 @@
 # Usage: Open Terminal, navigate to folder containing the script and before first run enter:
 # chmod +x edl_to_hindenburg.awk
 # To convert the EDL file my-file.edl enter:
-# edl_to_hindenburg.awk my-file.edl
+# edl_to_hindenburg.awk /path/to/my-file.edl
 #
 # Revision history :
 # 13. Mar 2019 - v0.9 - creation by Thomas Reintjes
