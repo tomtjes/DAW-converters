@@ -27,6 +27,7 @@ BEGIN {
   inputfile = ARGV[1]
   cmd="dirname \""inputfile"\""
   cmd | getline outputpath
+  if (outputpath == "") outputpath=ENVIRON["PWD"]
   cmd="basename \""inputfile"\" .edl"
   cmd | getline project
   outputfolder=project" Files"
@@ -48,10 +49,12 @@ BEGIN {
     file_number=$1
     #urldecode
     for (y=0;y<255;y++) if (y!=37) gsub(sprintf("%%%02x|%%%02X",y,y), y==38 ? "\\&" : sprintf("%c", y), $0);gsub(/%25/, "%", $0);
+    #find quoted filenames
     split($0, a, "\"");
     originalpath[file_number] = a[2];
     #remove file://
     if (originalpath[file_number] ~ /file:/) originalpath[file_number]=substr(originalpath[file_number],8)
+    #separate filename from rest of path
     n = split(originalpath[file_number], b, "/")
     filename[file_number]=b[n]
     cmd="cp \""originalpath[file_number]"\" \""outputpath"/"outputfolder"/"filename[file_number]"\""

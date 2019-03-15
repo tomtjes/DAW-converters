@@ -31,6 +31,7 @@ BEGIN {
   inputfile = ARGV[1]
   cmd="dirname \""inputfile"\""
   cmd | getline outputpath
+  if (outputpath == "") outputpath=ENVIRON["PWD"]
   cmd="basename \""inputfile"\" .edl"
   cmd | getline project
   outputfolder=project" Files"
@@ -53,7 +54,7 @@ BEGIN {
   #(not used) playout[number_of_items]=((substr($8,1,2) * 3600) + (substr($8,4,2) * 60) + substr($8,7,2) + (substr($8,10,2) * 0.04))
   seconds[number_of_items]=(recout[number_of_items]-recin[number_of_items])
   #get next line, and check if file name in it has been seen before
-  getline;
+  getline
   thisfile=substr($0,index($0,$5))
   if (!seen[thisfile]) {
     number_of_files++

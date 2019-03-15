@@ -29,6 +29,7 @@ BEGIN {
   inputfile = ARGV[1]
   cmd="dirname \""inputfile"\""
   cmd | getline outputpath
+  if (outputpath == "") outputpath=ENVIRON["PWD"]
   cmd="basename \""inputfile"\" .edl"
   cmd | getline project
   outputfile=outputpath"/"project"-samplitude.edl"
