@@ -12,11 +12,11 @@
 # 
 # Usage: Open Terminal, navigate to folder containing the script and before first run enter:
 # chmod +x edl_to_samplitude-edl.awk
-# To convert the EDL file my-file.edl enter:
+# To convert the EDL file /path/to/my-file.edl enter:
 # edl_to_samplitude-edl.awk /path/to/my-file.edl
 #
 # Revision history :
-# 13. Mar 2019 - v0.9 - creation by Thomas Reintjes
+# 14. Mar 2019 - v0.9 - creation by Thomas Reintjes (https://reidio.io)
 #
 #
 ##############################################################################################################################################

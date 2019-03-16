@@ -6,23 +6,24 @@
 # Tools able to import Samplitude EDL include Reaper, Samplitude
 #
 # This script only places items on tracks. No volume adjustments, plugin settings, markers, et cetera will be converted.
+# Both tracks and clipboard groups will be converted, clipboard groups being turned into tracks, with items spaced out evenly.
+# Adjust gap seconds between clipboard clips:
+  gap=3
 #
-# This should work on MacOS and Linux, XMLStarlet is required however:
+# This script should work on MacOS and Linux, XMLStarlet is required however:
 # http://xmlstar.sourceforge.net/doc/UG/xmlstarlet-ug.html
 # 
 # Usage: Open Terminal, navigate to folder containing the script and before first run enter:
 # chmod +x hindenburg_to_samplitude-edl.sh
-# To convert the Hindenburg file my-session.nhsx enter:
+# To convert the Hindenburg file /path/to/my-session.nhsx enter:
 # hindenburg_to_samplitude-edl.sh /path/to/my-session.nhsx
 #
 # Revision history :
-# 06. Mar 2019 - v0.9 - creation by Thomas Reintjes
+# 14. Mar 2019 - v0.9 - creation by Thomas Reintjes (https://reidio.io)
 #
 #
 ##############################################################################################################################################
 
-#settings
-gap=3  #seconds between clipboard clips
 
 #command line variables
 inputfile="$1"
